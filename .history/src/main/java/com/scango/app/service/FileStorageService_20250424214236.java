@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.annotation.PostConstruct;
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -26,7 +26,7 @@ public class FileStorageService {
 
     private final Path fileStorageLocation;
     private final FileRepository fileRepository;
-
+    
     @Value("${app.base-url:http://localhost:8080}")
     private String baseUrl;
 
@@ -41,8 +41,7 @@ public class FileStorageService {
         try {
             Files.createDirectories(fileStorageLocation);
         } catch (IOException e) {
-            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.",
-                    e);
+            throw new FileStorageException("Could not create the directory where the uploaded files will be stored.", e);
         }
     }
 
@@ -58,7 +57,7 @@ public class FileStorageService {
 
             // Create the file info entity
             FileInfo fileInfo = new FileInfo(fileName, file.getContentType(), file.getSize());
-
+            
             // Create the file on the server
             Path targetLocation = this.fileStorageLocation.resolve(fileInfo.getFileId() + "_" + fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -80,12 +79,11 @@ public class FileStorageService {
             if (!fileInfoOpt.isPresent()) {
                 throw new FileStorageException("File not found with id " + fileId);
             }
-
+            
             FileInfo fileInfo = fileInfoOpt.get();
-            Path filePath = this.fileStorageLocation.resolve(fileInfo.getFileId() + "_" + fileInfo.getFileName())
-                    .normalize();
+            Path filePath = this.fileStorageLocation.resolve(fileInfo.getFileId() + "_" + fileInfo.getFileName()).normalize();
             Resource resource = new UrlResource(filePath.toUri());
-
+            
             if (resource.exists()) {
                 return resource;
             } else {
@@ -95,4 +93,4 @@ public class FileStorageService {
             throw new FileStorageException("File not found", ex);
         }
     }
-}
+} 

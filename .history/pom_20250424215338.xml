@@ -15,7 +15,7 @@
     <description>File sharing application with QR code</description>
     
     <properties>
-        <java.version>17</java.version>
+        <java.version>22</java.version>
     </properties>
     
     <dependencies>
@@ -77,8 +77,11 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.12.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>22</source>
+                    <target>22</target>
+                    <compilerArgs>
+                        <arg>--enable-preview</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>

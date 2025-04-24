@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Controller
@@ -34,16 +34,16 @@ public class FileController {
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, Model model) {
         FileInfo fileInfo = fileStorageService.storeFile(file);
-
+        
         // Generate QR code for the download URL
         String qrCodeImage = qrCodeService.generateQRCodeImage(fileInfo.getDownloadUrl(), 250, 250);
-
+        
         model.addAttribute("fileName", fileInfo.getFileName());
         model.addAttribute("fileId", fileInfo.getFileId());
         model.addAttribute("fileSize", fileInfo.getSize());
         model.addAttribute("downloadUrl", fileInfo.getDownloadUrl());
         model.addAttribute("qrCode", qrCodeImage);
-
+        
         return "result";
     }
 
@@ -69,4 +69,4 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
-}
+} 
