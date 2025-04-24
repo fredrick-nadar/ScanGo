@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ScanGo - Download File</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #f5f5f5;
+        }
+        .download-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #4a4a4a;
+            font-weight: 600;
+        }
+        .file-icon {
+            font-size: 64px;
+            color: #6c63ff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .file-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .file-details p {
+            margin-bottom: 10px;
+        }
+        .download-button {
+            background-color: #6c63ff;
+            border-color: #6c63ff;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .download-button:hover {
+            background-color: #5a52d5;
+            border-color: #5a52d5;
+        }
+        .security-info {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .progress {
+            display: none;
+            margin-top: 20px;
+        }
+        .download-status {
+            display: none;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="download-container">
+            <div class="header">
+                <h1>ScanGo</h1>
+                <p class="text-muted">Secure File Download</p>
+            </div>
+            
+            <div class="file-icon">
+                <i class="bi bi-file-earmark-text"></i>
+            </div>
+            
+            <div class="file-details">
+                <p><strong>File Name:</strong> <span th:text="${fileName}">filename.pdf</span></p>
+                <p><strong>File Size:</strong> <span th:text="${fileSize}">1024 KB</span></p>
+                <p><strong>Upload Date:</strong> <span th:text="${uploadDate}">2024-04-24</span></p>
+            </div>
+            
+            <div class="d-grid">
+                <button class="btn btn-primary download-button" onclick="startDownload()">
+                    <i class="bi bi-download"></i>
+                    Download File
+                </button>
+                
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" 
+                         aria-valuenow="0" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+                
+                <div class="download-status alert" role="alert"></div>
+            </div>
+            
+            <div class="security-info">
+                <h5><i class="bi bi-shield-check"></i> Secure Download</h5>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success"></i> File scanned for viruses</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Secure HTTPS connection</li>
+                    <li><i class="bi bi-check-circle text-success"></i> Direct download link</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function startDownload() {
+            const progressBar = document.querySelector('.progress');
+            const progressBarInner = document.querySelector('.progress-bar');
+            const downloadStatus = document.querySelector('.download-status');
+            const downloadButton = document.querySelector('.download-button');
+            
+            // Show progress bar and disable button
+            progressBar.style.display = 'block';
+            downloadButton.disabled = true;
+            
+            // Simulate progress (in real implementation, this would be actual download progress)
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 5;
+                progressBarInner.style.width = progress + '%';
+                progressBarInner.setAttribute('aria-valuenow', progress);
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    // Trigger actual download
+                    window.location.href = /*[[@{${downloadUrl}}]]*/ '';
+                    
+                    // Show success message
+                    downloadStatus.className = 'download-status alert alert-success';
+                    downloadStatus.style.display = 'block';
+                    downloadStatus.innerHTML = '<i class="bi bi-check-circle"></i> Download started successfully!';
+                    
+                    // Re-enable button after short delay
+                    setTimeout(() => {
+                        downloadButton.disabled = false;
+                        progressBar.style.display = 'none';
+                    }, 3000);
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html> 

@@ -106,57 +106,17 @@
         }
     </style>
 
-    <script th:inline="javascript">
-        function copyToClipboard() {
-            // Get the URL from Thymeleaf variable
-            const url = /*[[${downloadUrl}]]*/ '';
-            
-            // Create a temporary input element
-            const tempInput = document.createElement('input');
-            tempInput.value = url;
-            document.body.appendChild(tempInput);
-            
-            // Select the text
-            tempInput.select();
-            tempInput.setSelectionRange(0, 99999); // For mobile devices
-            
-            // Try to copy using document.execCommand (older browsers)
-            let success = false;
-            try {
-                success = document.execCommand('copy');
-                if (!success) {
-                    // Fallback to clipboard API
-                    navigator.clipboard.writeText(url);
-                    success = true;
-                }
-            } catch (err) {
-                console.error('Copy failed:', err);
-            }
-            
-            // Remove the temporary input
-            document.body.removeChild(tempInput);
-            
-            // Show feedback
-            const copyStatus = document.getElementById('copyStatus');
-            if (success) {
-                copyStatus.innerHTML = '<span class="badge bg-success">✓ Copied!</span>';
-            } else {
-                copyStatus.innerHTML = '<span class="badge bg-danger">Failed to copy</span>';
-            }
-            
-            // Clear the status after 2 seconds
-            setTimeout(() => {
-                copyStatus.innerHTML = '';
-            }, 2000);
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function() {
+                document.getElementById('copyStatus').innerText = 'Link copied!';
+                setTimeout(function() {
+                    document.getElementById('copyStatus').innerText = '';
+                }, 2000);
+            }, function(err) {
+                console.error('Could not copy text: ', err);
+            });
         }
-
-        // Add click handler when document is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            const copyButton = document.getElementById('copyButton');
-            if (copyButton) {
-                copyButton.addEventListener('click', copyToClipboard);
-            }
-        });
     </script>
 </head>
 <body>
@@ -181,14 +141,14 @@
                         <p>
                             <strong>Direct Link:</strong><br>
                             <a th:href="${downloadUrl}" class="text-break" target="_blank" th:text="${downloadUrl}">https://your-link.com</a>
-                            <button class="btn btn-sm btn-outline-secondary ms-2" id="copyButton" type="button">
+                            <button class="btn btn-sm btn-outline-secondary ms-2" onclick="copyToClipboard(document.querySelector('a[th\\:href]').getAttribute('href'))">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
                                     <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
                                     <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
                                 </svg>
                                 Copy
                             </button>
-                            <span id="copyStatus" class="ms-2"></span>
+                            <span id="copyStatus" class="text-success ms-2"></span>
                         </p>
                     </div>
 

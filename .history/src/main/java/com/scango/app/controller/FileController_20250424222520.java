@@ -4,7 +4,6 @@ import com.scango.app.model.FileInfo;
 import com.scango.app.service.FileStorageService;
 import com.scango.app.service.QRCodeService;
 import com.scango.app.service.NgrokService;
-import com.scango.app.exception.FileStorageException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -75,17 +74,11 @@ public class FileController {
 
             FileInfo fileInfo = fileInfoOpt.get();
 
-            // Get the ngrok public URL
-            String baseUrl = ngrokService.getPublicUrl();
-            if (baseUrl == null) {
-                baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            }
-
             // Add file information to the model
             model.addAttribute("fileName", fileInfo.getFileName());
             model.addAttribute("fileSize", formatFileSize(fileInfo.getSize()));
             model.addAttribute("uploadDate", fileInfo.getUploadDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            model.addAttribute("downloadUrl", baseUrl + "/api/files/download/start/" + fileId);
+            model.addAttribute("downloadUrl", "/api/files/download/start/" + fileId);
 
             return "download";
         } catch (Exception e) {

@@ -75,17 +75,11 @@ public class FileController {
 
             FileInfo fileInfo = fileInfoOpt.get();
 
-            // Get the ngrok public URL
-            String baseUrl = ngrokService.getPublicUrl();
-            if (baseUrl == null) {
-                baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-            }
-
             // Add file information to the model
             model.addAttribute("fileName", fileInfo.getFileName());
             model.addAttribute("fileSize", formatFileSize(fileInfo.getSize()));
             model.addAttribute("uploadDate", fileInfo.getUploadDate().format(DateTimeFormatter.ISO_LOCAL_DATE));
-            model.addAttribute("downloadUrl", baseUrl + "/api/files/download/start/" + fileId);
+            model.addAttribute("downloadUrl", "/api/files/download/start/" + fileId);
 
             return "download";
         } catch (Exception e) {
