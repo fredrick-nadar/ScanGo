@@ -2,24 +2,16 @@
 echo ScanGo - Enhanced Global Access Setup with ngrok
 echo -----------------------------------------------
 
+:: Set ngrok authtoken
+echo Setting ngrok authtoken...
+ngrok authtoken 2t1bmDHElJinFHZfK7E3pyaSG5z_7dUU3krqPnhuRfCKBdaGm
+
 :: Check if ngrok is installed
 where ngrok >nul 2>&1
 if %ERRORLEVEL% NEQ 0 (
     echo ngrok is not installed. Please install it first:
     echo Visit https://ngrok.com/download, sign up, and follow instructions
     exit /b 1
-)
-
-:: Check if ngrok is authenticated
-ngrok config check >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo ngrok is not authenticated. Please enter your authtoken:
-    set /p NGROK_AUTHTOKEN="Enter your ngrok authtoken: "
-    ngrok authtoken %NGROK_AUTHTOKEN%
-    if %ERRORLEVEL% NEQ 0 (
-        echo Failed to authenticate ngrok. Please check your authtoken.
-        exit /b 1
-    )
 )
 
 :: Create uploads directory if it doesn't exist
@@ -29,24 +21,16 @@ if not exist "uploads" mkdir uploads
 echo Starting ngrok tunnel...
 start "ngrok" cmd /c "ngrok http 8080"
 
-:: Wait for ngrok to start and get the URL
-echo Waiting for ngrok to initialize...
-set NGROK_URL=
-for /L %%i in (1,1,30) do (
-    timeout /t 2 /nobreak >nul
-    for /f "tokens=2 delims=:" %%a in ('curl -s http://localhost:4040/api/tunnels ^| findstr "public_url"') do (
-        set NGROK_URL=%%a
-        set NGROK_URL=!NGROK_URL:"=!
-        set NGROK_URL=!NGROK_URL:,=!
-        goto :url_found
-    )
-)
-:url_found
+:: Wait for ngrok to start
+echo Waiting for ngrok to initialize (10 seconds)...
+timeout /t 10 /nobreak >nul
 
-if "%NGROK_URL%"=="" (
-    echo Failed to get ngrok URL. Please check if ngrok is running properly.
-    exit /b 1
-)
+:: Prompt user to manually copy the ngrok URL
+echo ======================================================================
+echo IMPORTANT: Look at the ngrok window and copy the HTTPS URL (e.g. https://xxxx-xxxx.ngrok-free.app)
+echo ======================================================================
+echo.
+set /p NGROK_URL="Enter the ngrok URL from the window (https://...): "
 
 :: Create ngrok properties file with the URL
 echo Creating configuration with the ngrok URL...

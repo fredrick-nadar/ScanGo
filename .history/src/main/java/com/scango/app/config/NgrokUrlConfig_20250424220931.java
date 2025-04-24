@@ -106,9 +106,9 @@ public class NgrokUrlConfig {
             Matcher matcher = pattern.matcher(content.toString());
 
             if (matcher.find()) {
-                String ngrokUrl = matcher.group(1);
-                logger.debug("Found ngrok URL: {}", ngrokUrl);
-                return ngrokUrl;
+                String url = matcher.group(1);
+                logger.debug("Found ngrok URL: {}", url);
+                return url;
             }
 
             logger.warn("No ngrok URL found in API response");

@@ -69,10 +69,10 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <!-- Ngrok API -->
+        <!-- Ngrok Java SDK -->
         <dependency>
             <groupId>com.ngrok</groupId>
-            <artifactId>ngrok-api-java</artifactId>
+            <artifactId>ngrok-java</artifactId>
             <version>0.11.0</version>
         </dependency>
     </dependencies>

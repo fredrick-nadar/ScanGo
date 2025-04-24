@@ -72,8 +72,8 @@
         <!-- Ngrok API -->
         <dependency>
             <groupId>com.ngrok</groupId>
-            <artifactId>ngrok-api-java</artifactId>
-            <version>0.11.0</version>
+            <artifactId>ngrok-api</artifactId>
+            <version>0.10.0</version>
         </dependency>
     </dependencies>
     
