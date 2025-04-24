@@ -6,84 +6,369 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #5D3FD3;
+            --primary-hover: #4E2EC4;
+            --gradient-start: #5D3FD3;
+            --gradient-end: #BF5AF2;
+            --dark-color: #121212;
+            --light-color: #FFFFFF;
+            --card-bg: rgba(28, 28, 30, 0.8);
+            --success-color: #10B981;
+        }
+        
         body {
-            padding-top: 50px;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #121212 0%, #262626 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+            color: var(--light-color);
+            position: relative;
+            overflow-x: hidden;
         }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(93, 63, 211, 0.15) 0%, transparent 50%);
+            z-index: -1;
+            animation: rotate 60s linear infinite;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
         .download-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 30px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            max-width: 650px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
         }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .download-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4),
+                       0 0 0 1px rgba(255, 255, 255, 0.15);
+        }
+        
         .header {
             text-align: center;
             margin-bottom: 30px;
         }
+        
         .header h1 {
-            color: #4a4a4a;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            animation: glow 3s ease-in-out infinite alternate;
+            position: relative;
+            display: inline-block;
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 20px rgba(93, 63, 211, 0.5); }
+            100% { text-shadow: 0 0 30px rgba(191, 90, 242, 0.8); }
+        }
+        
+        .header h1::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            border-radius: 3px;
+        }
+        
+        .header p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-top: 15px;
+        }
+        
+        .file-icon {
+            font-size: 70px;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .file-details {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--gradient-end);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .file-details:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .file-details p {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .file-details p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .file-details strong {
+            min-width: 130px;
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+        
+        .file-details span {
             font-weight: 600;
         }
-        .file-icon {
-            font-size: 64px;
-            color: #6c63ff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .file-details {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .file-details p {
-            margin-bottom: 10px;
-        }
+        
         .download-button {
-            background-color: #6c63ff;
-            border-color: #6c63ff;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            border: none;
+            color: white;
             padding: 15px 30px;
-            font-size: 1.1em;
+            font-size: 1.1rem;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 20px rgba(93, 63, 211, 0.3);
+            position: relative;
+            overflow: hidden;
         }
+        
         .download-button:hover {
-            background-color: #5a52d5;
-            border-color: #5a52d5;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(93, 63, 211, 0.4);
+            color: white;
         }
+        
+        .download-button:active {
+            transform: translateY(1px);
+        }
+        
+        .download-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shine 3s infinite;
+        }
+        
+        @keyframes shine {
+            to {
+                left: 200%;
+            }
+        }
+        
         .security-info {
             margin-top: 30px;
-            padding: 15px;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
         }
+        
+        .security-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .security-info h5 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .security-info ul li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .security-info ul li:last-child {
+            margin-bottom: 0;
+        }
+        
+        .security-info ul li i {
+            font-size: 18px;
+            background: linear-gradient(to right, #10B981, #059669);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
         .progress {
+            height: 12px;
+            margin-top: 25px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            overflow: hidden;
             display: none;
-            margin-top: 20px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
         }
+        
+        .progress-bar {
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            height: 100%;
+            border-radius: 50px;
+        }
+        
         .download-status {
-            display: none;
-            margin-top: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
             text-align: center;
+            font-weight: 600;
+            display: none;
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .download-status.alert-success {
+            background-color: rgba(16, 185, 129, 0.05);
+            color: #10B981;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+        }
+        
+        .floating-back {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .floating-back:hover {
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end));
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(93, 63, 211, 0.3);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .download-container {
+                padding: 30px 20px;
+            }
+            
+            .file-details {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .security-info {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <a href="/" class="floating-back">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    
     <div class="container">
         <div class="download-container">
             <div class="header">
                 <h1>ScanGo</h1>
-                <p class="text-muted">Secure File Download</p>
+                <p>Secure File Download</p>
             </div>
             
             <div class="file-icon">
-                <i class="bi bi-file-earmark-text"></i>
+                <i class="bi bi-file-earmark-arrow-down"></i>
             </div>
             
             <div class="file-details">
@@ -93,8 +378,8 @@
             </div>
             
             <div class="d-grid">
-                <button class="btn btn-primary download-button" onclick="startDownload()">
-                    <i class="bi bi-download"></i>
+                <button class="btn download-button" onclick="startDownload()">
+                    <i class="bi bi-download me-2"></i>
                     Download File
                 </button>
                 
@@ -113,9 +398,9 @@
             <div class="security-info">
                 <h5><i class="bi bi-shield-check"></i> Secure Download</h5>
                 <ul class="list-unstyled">
-                    <li><i class="bi bi-check-circle text-success"></i> File scanned for viruses</li>
-                    <li><i class="bi bi-check-circle text-success"></i> Secure HTTPS connection</li>
-                    <li><i class="bi bi-check-circle text-success"></i> Direct download link</li>
+                    <li><i class="bi bi-check-circle-fill"></i> File scanned for viruses</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Secure HTTPS connection</li>
+                    <li><i class="bi bi-check-circle-fill"></i> Direct download link</li>
                 </ul>
             </div>
         </div>
@@ -156,7 +441,7 @@
                     // Show success message
                     downloadStatus.className = 'download-status alert alert-success';
                     downloadStatus.style.display = 'block';
-                    downloadStatus.innerHTML = '<i class="bi bi-check-circle"></i> Download started successfully!';
+                    downloadStatus.innerHTML = '<i class="bi bi-check-circle me-2"></i> Download started successfully!';
                     
                     // Re-enable button after short delay
                     setTimeout(() => {
@@ -166,6 +451,25 @@
                 }
             }, 100);
         }
+        
+        // Create background particles
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create and append particles to body
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = Math.random() * 10 + 5 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.background = '#5D3FD3';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                particle.style.animation = `float ${Math.random() * 20 + 10}s infinite`;
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                document.body.appendChild(particle);
+            }
+        });
     </script>
 </body>
 </html> 
