@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>ScanGo - File Sharing with QR Code</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #f5f5f5;
+        }
+        .file-upload-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #4a4a4a;
+            font-weight: 600;
+        }
+        .upload-icon {
+            font-size: 64px;
+            color: #6c63ff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .custom-file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .custom-file-upload:hover {
+            border-color: #6c63ff;
+        }
+        .btn-primary {
+            background-color: #6c63ff;
+            border-color: #6c63ff;
+            padding: 10px 20px;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            background-color: #5a52d5;
+            border-color: #5a52d5;
+        }
+        #fileSelected {
+            margin-top: 10px;
+            font-weight: 500;
+            color: #4a4a4a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="file-upload-container">
+            <div class="header">
+                <h1>ScanGo</h1>
+                <p class="text-muted">Upload and share files via QR code</p>
+            </div>
+            
+            <div class="upload-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                </svg>
+            </div>
+            
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <label for="file" class="custom-file-upload" id="dropZone">
+                    <p>Drag and drop your file here</p>
+                    <p>or</p>
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('file').click()">Browse Files</button>
+                    <input type="file" id="file" name="file" style="display: none;" onchange="updateFileName()">
+                    <p id="fileSelected" class="mt-2"></p>
+                </label>
+                
+                <div class="d-grid">
+                    <button class="btn btn-primary btn-lg" type="submit" id="uploadBtn" disabled>Upload File</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function updateFileName() {
+            const fileInput = document.getElementById('file');
+            const fileSelected = document.getElementById('fileSelected');
+            const uploadBtn = document.getElementById('uploadBtn');
+            
+            if (fileInput.files.length > 0) {
+                const fileName = fileInput.files[0].name;
+                const fileSize = formatFileSize(fileInput.files[0].size);
+                fileSelected.innerHTML = fileName + ' (' + fileSize + ')';
+                uploadBtn.disabled = false;
+            } else {
+                fileSelected.innerHTML = '';
+                uploadBtn.disabled = true;
+            }
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Drag and drop functionality
+        const dropZone = document.getElementById('dropZone');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropZone.style.borderColor = '#6c63ff';
+        }
+        
+        function unhighlight() {
+            dropZone.style.borderColor = '#ddd';
+        }
+        
+        dropZone.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('file').files = files;
+            updateFileName();
+        }
+    </script>
+</body>
+</html> 

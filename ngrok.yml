@@ -1,0 +1,17 @@
+version: "2"
+authtoken: paste_your_auth_token_here  # Replace with your actual authtoken
+console_ui: true
+region: us  # Change this to your preferred region (us, eu, ap, au, sa, jp, in)
+
+tunnels:
+  scango:
+    proto: http
+    addr: 8080
+    inspect: false  # Disable request inspection for better performance
+    subdomain: your-chosen-subdomain  # Premium feature - remove if using free plan
+    
+    # Optimize for better file transfer performance
+    compression: false  # Disable compression for file transfers
+    
+    # Add basic auth if desired
+    # auth: "username:password" 
